@@ -1,0 +1,1 @@
+[06-Mar-2021 05:39:14 America/New_York] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 7.3.0". You are running 7.0.33. in /home/shuddhob/sstbroadband.shuddhobarta24.com/vendor/composer/platform_check.php on line 24
