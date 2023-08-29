@@ -15,7 +15,6 @@
                     <thead>
                         <tr>
                             <th class="align-middle text-center">Sl.</th>
-                            <th class="align-middle text-center">Name</th>
                             <th class="align-middle text-center">User Id</th>
                             <th class="align-middle text-center">Packeg Id</th>
                             <th class="align-middle text-center">Amount</th>
@@ -27,7 +26,6 @@
                         @foreach($adminbills as $adminbill)
                         <tr>
                             <td class="align-middle text-center">{{ ++$loop->index }}</td>
-                            <td class="align-middle text-center">{{ $adminbill->name }}</td>
                             <td class="align-middle text-center">{{ $adminbill->user_id }}</td>
                             <td class="align-middle text-center">{{ $adminbill->package_id }}</td>
                             <td class="align-middle text-center">{{ $adminbill->amounts }}</td>
