@@ -195,6 +195,11 @@ class AdminCustomerController extends Controller
         $url = "http://api.greenweb.com.bd/api.php?json";
 
 
+
+
+
+
+
         $data = array(
 
             'to' => "$to",
@@ -237,6 +242,7 @@ class AdminCustomerController extends Controller
 
         return redirect()->route('customer.activelist')->with('succsess', 'add successfully');
     }
+
 
 
 
@@ -296,6 +302,33 @@ class AdminCustomerController extends Controller
             'status' => 1,
 
         ]);
+
+        // after payment devide the bill amount 60% for company and 40% for admin
+
+        $totalAmount = $request->amount;
+        $broadbandCompanyAmount = $totalAmount * 0.6; // 60% to the broadband company
+        $adminAmount = $totalAmount * 0.4; // 40% to the admin
+
+        BroadbandCompanyBill::create([
+            'name' => $cust->name,
+            'user_id' => $cust->user_id,
+            'package_id' => $cust->package_id,
+            'months' => json_encode($cust->months),
+            'amounts' => $broadbandCompanyAmount,
+            'status' => 1,
+            'paid' => 1,
+        ]);
+
+        AdminBillModel::create([
+            'name' => $cust->name,
+            'user_id' => $cust->user_id,
+            'package_id' => $cust->package_id,
+            'months' => json_encode($cust->months),
+            'amounts' => $adminAmount,
+            'status' => 1,
+            'paid' => 1,
+        ]);
+
 
         //Start Mobile Sms Notification
 
@@ -396,8 +429,6 @@ class AdminCustomerController extends Controller
 
         return back()->with('succsess', 'Change successfully');
     }
-
-    // RIIMON NAHID CODE UPDATE FOR CUSTOMER
 
     public function customerUpdate($id, Request $request)
     {

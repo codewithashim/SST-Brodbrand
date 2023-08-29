@@ -145,6 +145,13 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Admin Customer Routes
 
+    // due customer list
+    Route::get('/customer/duelist', [AdminCustomerController::class, 'customerduelist'])->name('customer.duelist');
+
+    Route::post('/customer/due', [AdminCustomerController::class, 'customerdue'])->name('customer.due');
+
+    // Admin Customer Routes
+
     Route::get('/customer/alllist', [AdminCustomerController::class, 'customerall'])->name('customer.alllist');
 
     Route::get('/customer/newlist', [AdminCustomerController::class, 'customernewlist'])->name('customer.newlist');
@@ -152,15 +159,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/customer/activelist', [AdminCustomerController::class, 'customeractivelist'])->name('customer.activelist');
 
     Route::get('/customer/inactivelist', [AdminCustomerController::class, 'customerinactivelist'])->name('customer.inactivelist');
-
-
-    // due customer list
-    Route::get('/customer/duelist', [AdminCustomerController::class, 'customerduelist'])->name('customer.duelist');
-
-    Route::post('/customer/due', [AdminCustomerController::class, 'customerdue'])->name('customer.due');
-
-    // Route::post('/customer/updateMonths', 'AdminCustomerController@updateMonths')->name('customer.updateMonths');
-
 
     Route::post('/customer/register', [AdminCustomerController::class, 'customerregister'])->name('customer.register');
 
@@ -171,6 +169,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/customer/delete/{id}', [AdminCustomerController::class, 'customerdelete'])->name('customer.delete');
 
     Route::post('/customer/change/package', [AdminCustomerController::class, 'changepackage'])->name('customer.change.package');
+
 
     // rimonnahid update
 
@@ -202,7 +201,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/invioce', [InvioceModelController::class, 'index'])->name('invioce');
 
     Route::get('/single/invioce/{id}', [InvioceModelController::class, 'singleinvioce'])->name('singleinvioce');
-
 });
 
 

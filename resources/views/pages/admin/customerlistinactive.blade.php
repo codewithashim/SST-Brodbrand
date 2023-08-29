@@ -200,11 +200,10 @@
 
                                             </div>
                                         </div>
-                                    </div><!-- /.modal-content -->
-                                </div><!-- /.modal-dialog -->
+                                    </div>
+                                </div>
                             </div>
-                            <!-- /.modal -->
-
+                         
                             {{-- Change Package Modal  --}}
                             <div id="changepackage{{ $customer->id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg">
