@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-
-
 @section('content')
 <div class="row">
     <div class="col-12">
@@ -122,6 +120,7 @@
                     </tr>
                     <!-- Month Modal -->
 
+                    <!-- Add this code to your Blade view file -->
                     <div class="modal fade" id="view{{ $customer->user_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -133,30 +132,39 @@
                                 </div>
                                 @csrf
                                 <div class="modal-body">
-                                    <form method="post" enctype="multipart/form-data">
+                                    <form action="{{ route('customer.payNow',$customer->id) }}" method="post" enctype="multipart/form-data">
                                         @csrf
+                                        <!-- Add payment amount input field -->
+                                        <div class="form-group">
+                                            <label>Payment Amount</label>
+                                            <input type="number" name="bill_amount" class="form-control" value="{{ $customer->bill_amount }}" id="payment_amount" placeholder="Enter Payment Amount" required>
+                                        </div>
+
                                         <input type="hidden" name="customer_id" value="{{ $customer->user_id }}">
                                         <div class="form-group">
                                             <label>Select Months</label>
                                             @php
-                                            $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                                            @endphp
-                                            @foreach ($months as $month)
-
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="months[]" value="{{$customer->months }}" id="{{ $month }}">
-                                                <label class="form-check-label" for="{{ $month }}">
-                                                    {{ $month }}
-                                                </label>
-                                            </div>
-                                            @endforeach
+                                            $currentYear = date('Y');
+                                            $months = [];
+                                            for ($i = 1; $i <= 12; $i++) { $timestamp=mktime(0, 0, 0, $i, 1, $currentYear); $monthName=date('F', $timestamp); $months[$i]=$monthName; } @endphp @foreach ($months as $key=> $month)
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="months[]" value="{{  $month }}" id="month{{ $key }}">
+                                                    <label class="form-check-label" for="month{{ $key }}">
+                                                        {{ $month }}
+                                                    </label>
+                                                </div>
+                                                @endforeach
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Update Months</button>
+
+                                        <button type="submit" class="btn btn-primary">
+                                            Pay Now
+                                        </button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
                     <!-- Edit modal content -->
 
@@ -279,14 +287,19 @@
 
                                                 <div class="form-group">
 
+                                                    <label>Amount :</label>
+
+                                                    <input class="form-control" name="bill_amount" value="{{ $customer->bill_amount }}">
+
+                                                </div>
+
+                                                <div class="form-group">
+
                                                     <label>User Id*</label>
 
                                                     <input class="form-control" value="{{ get_customer_netid($customer->user_id)->net_id }}">
 
                                                 </div>
-
-                                                // add the months here
-
 
                                                 <div class="form-group">
 
@@ -324,6 +337,30 @@
         </div>
 
     </div>
+    <!-- Add this script at the bottom of your Blade view -->
+    <script>
+        // Get all the checkboxes with the name "months"
+        const checkboxes = document.querySelectorAll('input[name="months[]"]');
+
+        // Add an event listener to the form for submission
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting
+
+            const selectedMonths = Array.from(checkboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.nextSibling.textContent.trim());
+
+            const paymentAmount = document.querySelector('input[name="payment_amount"]').value;
+
+            console.log('Selected Months:', selectedMonths);
+            console.log('Payment Amount:', paymentAmount);
+
+            // Now you can submit the form using JavaScript if needed
+            // Uncomment the following line if you want to submit the form
+            // event.target.submit();
+        });
+    </script>
+
 
 </div>
 

@@ -361,11 +361,11 @@
                             <a href="javascript:void(1);" class="waves-effect"><i class="mdi mdi-invert-colors"></i> <span> Bill </span> <span class="menu-arrow"></span></a>
                             <ul class="list-unstyled">
                                 <li>
-                                    <a href="{{route('admin.bills')}}"  class="waves-effect"><i class="mdi mdi-format-font"></i> <span>Admin Bill</span> </a>
+                                    <a href="{{route('adminbill')}}" class="waves-effect"><i class="mdi mdi-format-font"></i> <span>Admin Bill</span> </a>
                                 </li>
 
                                 <li>
-                                    <a href="# class=" waves-effect"><i class="mdi mdi-format-font"></i> <span>Company Bill</span> </a>
+                                    <a href="{{route('companybill')}}" class=" waves-effect"><i class="mdi mdi-format-font"></i> <span>Company Bill</span> </a>
                                 </li>
                             </ul>
                         </li>
@@ -377,9 +377,7 @@
                         </li>
 
                         <li>
-
                             <a href="{{ route('invioce') }}" class="waves-effect"><i class="mdi mdi-format-font"></i> <span> Invioce </span> </a>
-
                         </li>
 
 

@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AdminBillModel extends Model
+class BroadbandCompanyBill extends Model
 {
     use HasFactory;
-    protected $table = 'admin_bills';
+    protected $table = 'broadband_company_bills';
     protected $fillable = [
         'user_id',
         'package_id',

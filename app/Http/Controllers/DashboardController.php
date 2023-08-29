@@ -7,6 +7,9 @@ use App\Models\InvioceModel;
 use App\Models\PackageModel;
 use Illuminate\Http\Request;
 use App\Models\CustomerModel;
+use App\Models\BroadbandCompanyBill;
+use App\Models\AdminBillModel;
+
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -49,6 +52,9 @@ class DashboardController extends Controller
             'activecustomers' => CustomerModel::where('status', 1)->get(),
             'inactivecustomers' => CustomerModel::where('status', 2)->get(),
             'duecustomers' => CustomerModel::where('status', 3)->get(),
+            'total_company_bill_amount' => BroadbandCompanyBill::sum('amounts'),
+            'total_admin_bill' => AdminBillModel::sum('amounts'),
+
         ]);
     }
 
@@ -66,6 +72,10 @@ class DashboardController extends Controller
             'inactive_customers' => CustomerModel::where('status', '!=', 1)->whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->count(),
 
             'due_customers' => CustomerModel::where('status', 2)->whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->count(),
+
+            'total_company_bill_amount' => BroadbandCompanyBill::whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->sum('amounts'),
+
+            'total_admin_bill' => AdminBillModel::whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->sum('amounts'),
 
             'invoices' => InvioceModel::whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->count(),
 

@@ -24,6 +24,10 @@ use App\Http\Controllers\WithdrawController;
 
 use App\Http\Controllers\InvioceModelController;
 
+use App\Http\Controllers\AdminBillController;
+
+use App\Http\Controllers\BroadbandCompanyBillController;
+
 use Illuminate\Support\Facades\Auth;
 
 
@@ -117,6 +121,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard/expense/delete/{id}', [ExpenseController::class, 'delete'])->name('expense.delete');
 
 
+    // Admin Bill Routes
+    Route::get('/dashboard/adminbill', [AdminBillController::class, 'index'])->name('adminbill');
+
+
+    // Broadband Company Bill Routes
+    Route::get('/dashboard/companybill', [BroadbandCompanyBillController::class, 'index'])->name('companybill');
+
 
     // Package Route
 
@@ -143,8 +154,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/customer/inactivelist', [AdminCustomerController::class, 'customerinactivelist'])->name('customer.inactivelist');
 
 
-
-
     // due customer list
     Route::get('/customer/duelist', [AdminCustomerController::class, 'customerduelist'])->name('customer.duelist');
 
@@ -167,7 +176,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('/customer-update/{customer}', [AdminCustomerController::class, 'customerUpdate'])->name('customer.update');
 
-    // admin bill
+    // pay now with month
+
+    Route::post('/customer-pay-now/{customer}', [AdminCustomerController::class, 'payNowWithMonth'])->name('customer.payNow');
 
 
     // update months 
@@ -191,29 +202,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/invioce', [InvioceModelController::class, 'index'])->name('invioce');
 
     Route::get('/single/invioce/{id}', [InvioceModelController::class, 'singleinvioce'])->name('singleinvioce');
-
-
-    // admin bill
-
-    // Admin Bill Routes
-
-    Route::get('/admin/bills', [AdminBillController::class, 'adminbillall'])->name('admin.bills');
-    
-    Route::get('/admin/bills/create', [AdminBillController::class, 'create'])->name('admin.bills.create');
-    Route::post('/admin/bills/store', [AdminBillController::class, 'store'])->name('admin.bills.store');
-    Route::get('/admin/bills/edit/{id}', [AdminBillController::class, 'edit'])->name('admin.bills.edit');
-    Route::post('/admin/bills/update/{id}', [AdminBillController::class, 'update'])->name('admin.bills.update');
-    Route::get('/admin/bills/delete/{id}', [AdminBillController::class, 'delete'])->name('admin.bills.delete');
-
-
-    // Company Bill Routes
-
-    Route::get('/company/bills', [CompanyBillModelController::class, 'index'])->name('company.bills');
-    Route::get('/company/bills/create', [CompanyBillModelController::class, 'create'])->name('company.bills.create');
-    Route::post('/company/bills/store', [CompanyBillModelController::class, 'store'])->name('company.bills.store');
-    Route::get('/company/bills/edit/{id}', [CompanyBillModelController::class, 'edit'])->name('company.bills.edit');
-    Route::post('/company/bills/update/{id}', [CompanyBillModelController::class, 'update'])->name('company.bills.update');
-    Route::get('/company/bills/delete/{id}', [CompanyBillModelController::class, 'delete'])->name('company.bills.delete');
 
 });
 

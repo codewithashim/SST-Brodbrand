@@ -14,13 +14,22 @@ use Illuminate\Http\Request;
 
 use App\Models\CustomerModel;
 
+use Illuminate\Support\Facades\DB; // Import the DB facade
+
+
+// admin bill model
+
 use App\Models\AdminBillModel;
 
-use App\Models\CompanyBillModel;
+// comany bill model
+
+use App\Models\BroadbandCompanyBill;
+
 
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Hash;
+use Psy\Readline\Hoa\Console;
 
 class AdminCustomerController extends Controller
 
@@ -184,11 +193,6 @@ class AdminCustomerController extends Controller
 
 
         $url = "http://api.greenweb.com.bd/api.php?json";
-
-
-
-
-
 
 
         $data = array(
@@ -368,6 +372,8 @@ class AdminCustomerController extends Controller
 
         return back()->with('success', 'Customer status updated successfully.');
     }
+
+
     public function customerdelete($id)
 
     {
@@ -406,13 +412,48 @@ class AdminCustomerController extends Controller
             'pon_mac' => $request->pon_mac,
             'route_mac' => $request->route_mac,
             'address' => $request->address,
-            'months' => json_encode($request->months),
+            'months' =>  $request->months,
+            'bill_amount' => $request->bill_amount,
+        ]);
+        return 'success';
+    }
+    public function payNowWithMonth($id, Request $request)
+    {
+        // Get the customer
+        $customer = CustomerModel::where('id', $id)->first();
 
+        // Calculate the amounts for the broadband company and admin
+        $totalAmount = $request->bill_amount;
+        $broadbandCompanyAmount = $totalAmount * 0.6; // 60% to the broadband company
+        $adminAmount = $totalAmount * 0.4; // 40% to the admin
+
+        $customer->update([
+            'months' => $request->months,
+            'bill_amount' => $request->bill_amount,
+        ]);
+
+        BroadbandCompanyBill::create([
+            'name' => $request->name,
+            'user_id' => $customer->user_id,
+            'package_id' => $customer->package_id,
+            'months' => json_encode($customer->months),
+            'amounts' => $broadbandCompanyAmount,
+            'status' => 1,
+            'paid' => 1,
+        ]);
+
+        AdminBillModel::create([
+            'name' => $request->name,
+            'user_id' => $customer->user_id,
+            'package_id' => $customer->package_id,
+            'months' => json_encode($customer->months),
+            'amounts' => $adminAmount,
+            'status' => 1,
+            'paid' => 1,
         ]);
         return 'success';
     }
 
-    // UPDATE MONTHS CUSTOMER 
 
     public function customerdueupdate(Request $request)
     {
