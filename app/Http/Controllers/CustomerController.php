@@ -9,10 +9,9 @@ use App\Models\CustomerModel;
 
 class CustomerController extends Controller
 {
-    public function index()
-    {
-        return view('pages.customer.customerform', [
-            'packages' => PackageModel::where('status', 1)->get(),
+    public function index(){
+        return view('pages.customer.customerform',[
+            'packages' => PackageModel::where('status',1)->get(),
         ]);
     }
 
@@ -33,10 +32,6 @@ class CustomerController extends Controller
             'pon_mac' => ['required'],
             'route_mac' => ['required'],
             'address' => 'required',
-            'bill_amount' => 'required',
-            'months' => 'required',
-            'admin_bill' => 'required',
-            'company_bill' => 'required',
         ]);
     }
 }
