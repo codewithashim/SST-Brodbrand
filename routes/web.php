@@ -124,9 +124,22 @@ Route::group(['middleware' => 'auth'], function () {
     // Admin Bill Routes
     Route::get('/dashboard/adminbill', [AdminBillController::class, 'index'])->name('adminbill');
 
+    Route::post('/dashboard/adminbill/store', [AdminBillController::class, 'store'])->name('adminbill.store');
+
+    Route::post('/dashboard/adminbill/update/{id}', [AdminBillController::class, 'update'])->name('adminbill.update');
+
+    Route::get('/dashboard/adminbill/delete/{id}', [AdminBillController::class, 'delete'])->name('adminbill.delete');
+
+
 
     // Broadband Company Bill Routes
     Route::get('/dashboard/companybill', [BroadbandCompanyBillController::class, 'index'])->name('companybill');
+
+    Route::post('/dashboard/companybill/store', [BroadbandCompanyBillController::class, 'store'])->name('companybill.store');
+
+    Route::post('/dashboard/companybill/update/{id}', [BroadbandCompanyBillController::class, 'update'])->name('companybill.update');
+
+    Route::get('/dashboard/companybill/delete/{id}', [BroadbandCompanyBillController::class, 'delete'])->name('companybill.delete');
 
 
     // Package Route

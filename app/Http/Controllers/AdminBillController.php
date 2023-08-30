@@ -32,16 +32,23 @@ class AdminBillController extends Controller
 
     public function update($id, Request $request)
     {
-        AdminBillModel::where('id', $id)->update([
-            'user_id' => 'required',
-            'package_id' => 'required',
-            'months' => 'required',
-            'amount' => 'required',
-            'status' => 'required',
-            'paid' => 'required',
-            'due_date' => 'required'
+        // Validate the request data
+        $request->validate([
+            'user_id' => 'required|integer',
+            'package_id' => 'required|integer',
+            'months' => 'required|string',
+            'amounts' => 'required|numeric',
         ]);
-        return redirect()->route('adminbill')->with('succsessedit', 'update successfully');
+
+        // Update the database record
+        AdminBillModel::where('id', $id)->update([
+            'user_id' => $request->input('user_id'),
+            'package_id' => $request->input('package_id'),
+            'months' => $request->input('months'),
+            'amounts' => $request->input('amounts'),
+        ]);
+
+        return redirect()->route('adminbill')->with('success', 'Update successful');
     }
 
     public function delete($id)
@@ -58,7 +65,7 @@ class AdminBillController extends Controller
             'user_id' => 'required',
             'package_id' => 'required',
             'months' => 'required',
-            'amount' => 'required',
+            'amounts' => 'required',
             'status' => 'required',
             'paid' => 'required',
             'due_date' => 'required'

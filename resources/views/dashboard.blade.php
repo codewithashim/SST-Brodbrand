@@ -87,20 +87,7 @@
                     </div>
                 </div>
             </div>
-            <!-- end col -->
-            <div class="col-xl-3 col-md-6">
-                <div class="card-box">
-                    <h4 class="header-title mt-0 m-b-30">Total Earn Amount</h4>
-                    <div class="widget-chart-1">
-                        <div class="widget-chart-box-1">
-                            <span style="font-size: 50px"> ৳ </span>
-                        </div>
-                        <div class="widget-detail-1 text-center">
-                            <h2 class="mb-0" id="total_incomes"> {{ $total_incomes }} </h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <!-- end col -->
             <div class="col-xl-3 col-md-6">
                 <div class="card-box">
@@ -129,34 +116,6 @@
                             <h2 class="mb-0" id="total_incomes"> {{ 
                                 $total_admin_bill
                             }} </h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end col -->
-            <div class="col-xl-3 col-md-6">
-                <div class="card-box">
-                    <h4 class="header-title mt-0 m-b-30">Total Cost</h4>
-                    <div class="widget-chart-1">
-                        <div class="widget-chart-box-1">
-                            <span style="font-size: 50px"> ৳ </span>
-                        </div>
-                        <div class="widget-detail-1 text-center">
-                            <h2 class="mb-0" id="total_cost"> {{ $total_cost }} </h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end col -->
-            <div class="col-xl-3 col-md-6">
-                <div class="card-box">
-                    <h4 class="header-title mt-0 m-b-30">Total Profit</h4>
-                    <div class="widget-chart-1">
-                        <div class="widget-chart-box-1">
-                            <span style="font-size: 50px"> ৳ </span>
-                        </div>
-                        <div class="widget-detail-1 text-center">
-                            <h2 class="mb-0" id="profit"> {{ $total_incomes - $total_cost }} </h2>
                         </div>
                     </div>
                 </div>

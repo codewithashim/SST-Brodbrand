@@ -13,6 +13,7 @@ use App\Models\PackageModel;
 use Illuminate\Http\Request;
 
 use App\Models\CustomerModel;
+use App\Models\BroadbandCompanyBill;
 
 use Illuminate\Support\Facades\DB; // Import the DB facade
 
@@ -23,7 +24,6 @@ use App\Models\AdminBillModel;
 
 // comany bill model
 
-use App\Models\BroadbandCompanyBill;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -95,10 +95,9 @@ class AdminCustomerController extends Controller
 
         return view('pages.admin.customerlistdue', [
 
-            'customers' => CustomerModel::where('status', 3)->get(),
+            'customers' => CustomerModel::where('payment_status', 'due')->get(),
 
             'heading' => "Due Customer List"
-
         ]);
     }
 
@@ -134,10 +133,6 @@ class AdminCustomerController extends Controller
 
         ]);
 
-
-
-
-
         CustomerModel::where('id', $request->id)->update([
 
             'user_id' => $user_id->id,
@@ -156,7 +151,13 @@ class AdminCustomerController extends Controller
 
             'address' => $request->address,
 
+            'packeg_amount' => $package->package_price,
+
             'active_date' => Carbon::now(),
+
+            'payment_status' => 'paid',
+
+            'last_payment_date' => Carbon::now(),
 
             'status' => 1,
 
@@ -238,8 +239,6 @@ class AdminCustomerController extends Controller
 
 
 
-
-
         return redirect()->route('customer.activelist')->with('succsess', 'add successfully');
     }
 
@@ -282,6 +281,8 @@ class AdminCustomerController extends Controller
         CustomerModel::where('id', $request->cust_id)->update([
 
             'status' => 1,
+            'payment_status' => 'paid',
+            'last_payment_date' => Carbon::now(),
 
         ]);
 
@@ -306,18 +307,7 @@ class AdminCustomerController extends Controller
         // after payment devide the bill amount 60% for company and 40% for admin
 
         $totalAmount = $request->amount;
-        $broadbandCompanyAmount = $totalAmount * 0.6; // 60% to the broadband company
         $adminAmount = $totalAmount * 0.4; // 40% to the admin
-
-        BroadbandCompanyBill::create([
-            'name' => $cust->name,
-            'user_id' => $cust->user_id,
-            'package_id' => $cust->package_id,
-            'months' => json_encode($cust->months),
-            'amounts' => $broadbandCompanyAmount,
-            'status' => 1,
-            'paid' => 1,
-        ]);
 
         AdminBillModel::create([
             'name' => $cust->name,
@@ -394,7 +384,7 @@ class AdminCustomerController extends Controller
 
         if ($activeInvoice) {
             // Get the due date of the active invoice
-            $dueDate = $activeInvoice->created_at->addDays(60); // Assuming due date is 60 days after invoice creation
+            $dueDate = $activeInvoice->created_at->addDays(30); // Assuming due date is 60 days after invoice creation
 
             // Check if the due date is in the past
             if (Carbon::now()->greaterThan($dueDate)) {
@@ -418,13 +408,8 @@ class AdminCustomerController extends Controller
 
     public function changepackage(Request $request)
     {
-
-
-
         CustomerModel::where('id', $request->cust_id)->update([
-
             'package_id' => $request->package_id,
-
         ]);
 
         return back()->with('succsess', 'Change successfully');
@@ -458,32 +443,39 @@ class AdminCustomerController extends Controller
         $broadbandCompanyAmount = $totalAmount * 0.6; // 60% to the broadband company
         $adminAmount = $totalAmount * 0.4; // 40% to the admin
 
-        $customer->update([
-            'months' => $request->months,
-            'bill_amount' => $request->bill_amount,
-        ]);
+        // Decode the existing months data from JSON
+        $existingMonths = json_decode($customer->months, true);
+        $existingMonths = $existingMonths ?? [];
 
-        BroadbandCompanyBill::create([
-            'name' => $request->name,
-            'user_id' => $customer->user_id,
-            'package_id' => $customer->package_id,
-            'months' => json_encode($customer->months),
-            'amounts' => $broadbandCompanyAmount,
-            'status' => 1,
-            'paid' => 1,
+        $newMonths = $request->months;
+        $mergedMonths = array_merge($existingMonths, $newMonths);
+
+
+        $prevBillAmount = $customer->bill_amount;
+        $margedBillAmount = $prevBillAmount + $request->bill_amount;
+
+        // Update the customer record with the merged months data
+        $customer->update([
+            'months' => json_encode($mergedMonths),
+            'bill_amount' => $margedBillAmount,
+            'last_payment_date' => Carbon::now(),
+            'payment_status' => 'paid',
         ]);
 
         AdminBillModel::create([
             'name' => $request->name,
             'user_id' => $customer->user_id,
             'package_id' => $customer->package_id,
-            'months' => json_encode($customer->months),
+            'months' => json_encode($newMonths),
             'amounts' => $adminAmount,
             'status' => 1,
             'paid' => 1,
         ]);
-        return 'success';
+
+        return back()->with('succsess', 'Payment successfully');
     }
+
+
 
 
     public function customerdueupdate(Request $request)
@@ -493,6 +485,7 @@ class AdminCustomerController extends Controller
         $customer->update([
             'months' => json_encode($request->months),
         ]);
-        return 'success';
+
+        return back()->with('succsess', 'Payment successfully');
     }
 }

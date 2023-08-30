@@ -10,13 +10,10 @@ class BroadbandCompanyBill extends Model
     use HasFactory;
     protected $table = 'broadband_company_bills';
     protected $fillable = [
-        'user_id',
-        'package_id',
         'months',
-        'amounts',
-        'status',
-        'paid',
-        'due_date'
+        'total_amount',
+        'billing_date',
+        'amounts'
     ];
 
     public function customer()

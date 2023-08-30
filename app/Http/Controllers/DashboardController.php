@@ -45,14 +45,14 @@ class DashboardController extends Controller
             'packages' => PackageModel::count(),
             'active_customers' => CustomerModel::where('status', 1)->count(),
             'inactive_customers' => CustomerModel::where('status', '!=', 1)->count(),
-            'due_customers' => CustomerModel::where('status', 2)->count(),
+            'due_customers' => CustomerModel::where('payment_status', 'due')->count(),
             'total_incomes' => InvioceModel::sum('package_price'),
             'total_cost' => ExpenseModel::sum('amount'),
             'invoices' => InvioceModel::count(),
             'activecustomers' => CustomerModel::where('status', 1)->get(),
             'inactivecustomers' => CustomerModel::where('status', 2)->get(),
-            'duecustomers' => CustomerModel::where('status', 3)->get(),
-            'total_company_bill_amount' => BroadbandCompanyBill::sum('amounts'),
+            'duecustomers' => CustomerModel::where('payment_status', 'due')->get(),
+            'total_company_bill_amount' => BroadbandCompanyBill::sum('total_amount'),
             'total_admin_bill' => AdminBillModel::sum('amounts'),
 
         ]);
@@ -71,16 +71,15 @@ class DashboardController extends Controller
 
             'inactive_customers' => CustomerModel::where('status', '!=', 1)->whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->count(),
 
-            'due_customers' => CustomerModel::where('status', 2)->whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->count(),
+            'due_customers' => CustomerModel::where('payment_status', 'due')->whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->count(),
 
-            'total_company_bill_amount' => BroadbandCompanyBill::whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->sum('amounts'),
+            'total_company_bill_amount' => BroadbandCompanyBill::whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->sum('total_amount'),
 
             'total_admin_bill' => AdminBillModel::whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->sum('amounts'),
 
             'invoices' => InvioceModel::whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->count(),
 
-            'total_incomes' => InvioceModel::whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->sum('package_price'),
-            'total_cost' => ExpenseModel::whereDate('created_at', '>=', $start_date)->whereDate('created_at', '<=', $end_date)->sum('amount'),
+           
         ];
         return $dashboard_data;
     }

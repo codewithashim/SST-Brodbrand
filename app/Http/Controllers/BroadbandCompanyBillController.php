@@ -16,7 +16,7 @@ class BroadbandCompanyBillController extends Controller
     {
         return view('pages.admin.companybill', [
             'companybills' => BroadbandCompanyBill::all(),
-            'heading' => 'All Company Bill List'
+            'heading' => 'Advance Company Bill List'
 
         ]);
     }
@@ -29,17 +29,21 @@ class BroadbandCompanyBillController extends Controller
 
     public function update($id, Request $request)
     {
-        BroadbandCompanyBill::where('id', $id)->update([
-            'name' => 'required',
-            'user_id' => 'required',
-            'package_id' => 'required',
-            'months' => 'required',
-            'amount' => 'required',
-            'status' => 'required',
-            'paid' => 'required',
-            'due_date' => 'required'
+        // Validate the request data
+        $request->validate([
+            'months' => 'required|string',
+            'total_amount' => 'required|numeric',
+            'billing_date' => 'required|date',
         ]);
-        return redirect()->route('companybill')->with('succsessedit', 'update successfully');
+
+        // Update the database record
+        BroadbandCompanyBill::where('id', $id)->update([
+            'months' => $request->months,
+            'total_amount' => $request->total_amount,
+            'billing_date' => $request->billing_date,
+        ]);
+
+        return redirect()->route('companybill')->with('success', 'Update successful');
     }
 
     public function delete($id)

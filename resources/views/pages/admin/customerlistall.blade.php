@@ -89,7 +89,7 @@
 
                         <td class="align-middle text-center">{{ $customer->phone }}</td>
 
-                        <td class="align-middle text-center"></td>
+                        <td class="align-middle text-center">{{get_customer_netid($customer->user_id)->net_id }}  </td>
 
                         <td class="align-middle text-center">
 
@@ -108,7 +108,7 @@
                         <td class="align-middle text-center">{{ $customer->bill_amount }}</td>
 
                         <td class="align-middle text-center">
-                            <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#view{{ $customer->user_id }}">Month</button>
+                            <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#monthModal{{ $customer->user_id }}">Month</button>
                         </td>
 
 
@@ -121,7 +121,7 @@
                     <!-- Month Modal -->
 
                     <!-- Add this code to your Blade view file -->
-                    <div class="modal fade" id="view{{ $customer->user_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="monthModal{{ $customer->user_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -143,17 +143,51 @@
                                         <input type="hidden" name="customer_id" value="{{ $customer->user_id }}">
                                         <div class="form-group">
                                             <label>Select Months</label>
+
                                             @php
                                             $currentYear = date('Y');
                                             $months = [];
-                                            for ($i = 1; $i <= 12; $i++) { $timestamp=mktime(0, 0, 0, $i, 1, $currentYear); $monthName=date('F', $timestamp); $months[$i]=$monthName; } @endphp @foreach ($months as $key=> $month)
+
+                                            $selected_user_id = $customer->id;
+
+                                            $paidMonths = [];
+
+                                            // Fetch the customer data first
+                                            $customer = DB::table('customer_models')
+                                            ->where('id', $selected_user_id)
+                                            ->first();
+
+                                            if ($customer && $customer->months) {
+                                            $paidMonths = json_decode($customer->months, true);
+                                            }
+
+                                            for ($i = 1; $i <= 12; $i++) { $timestamp=mktime(0, 0, 0, $i, 1, $currentYear); $monthName=date('F', $timestamp); $months[$i]=[ 'name'=> $monthName,
+                                                'year' => $currentYear,
+                                                ];
+                                                }
+                                                @endphp
+
+                                                @foreach ($months as $key => $month)
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="months[]" value="{{  $month }}" id="month{{ $key }}">
+                                                    @php
+                                                    // Combine the month and year into a single string
+                                                    $monthYear = $month['name'] . ' (' . $month['year'] . ')';
+
+                                                    // Check if the combined month and year is in the $paidMonths array
+                                                    $isPaid = is_array($paidMonths) && in_array($monthYear, $paidMonths);
+
+                                                    // Disable the checkbox if it's already paid
+                                                    $isDisabled = $isPaid;
+                                                    @endphp
+                                                    <input class="form-check-input" type="checkbox" name="months[]" value="{{ $monthYear }}" id="month{{ $key }}" {{ $isDisabled ? 'disabled' : '' }}>
                                                     <label class="form-check-label" for="month{{ $key }}">
-                                                        {{ $month }}
+                                                        {{ $month['name'] }} ({{ $month['year'] }})
                                                     </label>
                                                 </div>
                                                 @endforeach
+
+
+
                                         </div>
 
                                         <button type="submit" class="btn btn-primary">

@@ -352,6 +352,11 @@
 
                                 </li>
 
+                                <li>
+                                    <a href="{{ route('customer.duelist') }}" class="waves-effect"><i class="mdi mdi-format-font"></i> <span>Due</span> </a>
+                                </li>
+
+
                             </ul>
 
                         </li>
@@ -444,8 +449,9 @@
 
             <footer class="footer text-right">
 
-                2016 - 2018 © Adminto. Coderthemes.com
+                @php $year = date('Y') @endphp
 
+                {{ $year }} © SST-BROADBAND. All Rights Reserved.
             </footer>
 
 
