@@ -151,9 +151,9 @@ class AdminCustomerController extends Controller
 
             'address' => $request->address,
 
-            'packeg_amount' => $package->package_price,
-
             'active_date' => Carbon::now(),
+
+            'packeg_amount' => $request->amount,
 
             'payment_status' => 'paid',
 
@@ -191,14 +191,7 @@ class AdminCustomerController extends Controller
 
         $message = "Congratulation " . $request->name . "!! Welcome to our company." . "\n" . "your Id : " . $request->net_id . "\n" . "Your password : " . $request->password;
 
-
-
         $url = "http://api.greenweb.com.bd/api.php?json";
-
-
-
-
-
 
 
         $data = array(
@@ -222,22 +215,6 @@ class AdminCustomerController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         $smsresult = curl_exec($ch);
-
-
-
-        //Result
-
-        // echo $smsresult;
-
-        //Error Display
-
-        // echo curl_error($ch);
-
-
-
-        //End Mobile Sms Notification
-
-
 
         return redirect()->route('customer.activelist')->with('succsess', 'add successfully');
     }

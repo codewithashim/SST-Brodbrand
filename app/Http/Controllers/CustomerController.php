@@ -33,8 +33,6 @@ class CustomerController extends Controller
             'pon_mac' => ['required'],
             'route_mac' => ['required'],
             'address' => 'required',
-            'payment_status' => 'required',
-            'last_payment_date' => 'required',
         ]);
     }
 }
